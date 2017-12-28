@@ -18,6 +18,7 @@ var obj={
 	url : "http://127.0.0.1/index.php?q=1"
 	resp: "1"
 	free_ram : Sys.free_ram()
+	
 };
 
 File.write(JSON.stringify(obj, 'settings.json'));
