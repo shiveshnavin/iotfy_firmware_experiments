@@ -1,3 +1,3 @@
 # README #
 
-Refs
+Refs to Mongoose OS APIs
