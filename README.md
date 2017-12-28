@@ -2,7 +2,7 @@
 
 Notes on Mongoose OS APIs
 
-###### WIFI ######
+#### WIFI ####
 
 Do not configure WiFi means leave the module in AP (Access Point mode).
 
@@ -14,7 +14,7 @@ mod_file_rw.js : Includes samples for the file handling
 
 mod_1st_init.js : Includes methods to 
 
-###### init Config Schema ######
+#### init Config Schema ####
 
 inside mos.yml 
 
