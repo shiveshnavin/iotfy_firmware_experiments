@@ -11,7 +11,7 @@ let init_def=function(){
 	
 	let dev=JSON.parse(Cfg.get('def_s.dev')); // returns def_s.devid
 
-	if(devid.udid==0000000000000000)
+	if(dev.udid=="0000000000000000")
 	{
 
 			let http_url="http://127.0.0.1/index.php";
@@ -74,6 +74,8 @@ let init_cfg=function() {
 	Cfg.set( {wifi: {ap: {ssid: Cfg.get("def_s.ap.ssid")}}} );
 	Cfg.set( {wifi: {ap: {password: Cfg.get("def_s.ap.passwd")}}} );
  	Cfg.set({wifi: {ap: {enable: true}}});
+
+    Sys.usleep(50000);
 
 
 

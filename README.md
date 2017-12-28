@@ -21,7 +21,10 @@ inside mos.yml
 
 config_schema:
  - ["def_s", "o", {title: "Default Setting Set"}]  
- - ["def_s.dev", "s", "", {"udid": "0000000000000000"}]
- - ["def_s.ap", "s", "", {"ssid": "0000000000000000","passwd": "0000000000000000"}]
+ - ["def_s.dev", "o", {title: "Default Setting Set"}]
+ - ["def_s.ap", "o", {title: "Default Setting for Access Point"}]
+ - ["def_s.dev.udid","s","0000000000000000",{title: "Uninitialized UDID"}]
+ - ["def_s.ap.ssid","s","DEF_SSID",{title: "Default SSID"}]
+ - ["def_s.ap.passwd","s","DEF_PASS",{title: "Default PASSWD"}]
 
 
