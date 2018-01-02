@@ -4,6 +4,7 @@ load('api_mqtt.js');
 load('api_net.js');
 load('api_sys.js');
 load('api_timer.js');
+load('api_http.js');
 
 let led = Cfg.get('pins.led');
 let button = Cfg.get('pins.button');
@@ -23,7 +24,8 @@ let getInfo = function() {
     free_ram: Sys.free_ram()
   });
 };
-
+let ap_config_done=0;
+let ap_config_got=0;
 // Blink built-in LED every second
 GPIO.set_mode(led, GPIO.MODE_OUTPUT);
 Timer.set(3000 /* 1 sec */, true /* repeat */, function() {
@@ -31,11 +33,13 @@ Timer.set(3000 /* 1 sec */, true /* repeat */, function() {
   //print("Hello woddrld after 3s");
  //print(value ? 'Tick   ss  Tock' : 'Tock', 'uptime:', Sys.uptime(), getInfo());
 
-    let http_url="http://ip-api.com/json";
+  if(ap_config_got===0){
+    
+  let http_url="http://192.168.1.16/get_ap_data.php";
 
   httpCall(http_url);
   
-  
+  }
 }, null);
 
 
@@ -46,6 +50,7 @@ Timer.set(3000 /* 1 sec */, true /* repeat */, function() {
 let httpCall=function(url){
   
 
+print("REQUESTING "+url);
 			HTTP.query({
 			  url: url,
 			  headers: { 'X-q': 'query' },     // Optional - headers
@@ -67,7 +72,28 @@ let httpCall=function(url){
 						*/
 
 			  		print(body);
-			  	
+            if(body.length>5){
+              ap_config_got=1;
+            }			  	  
+  if(ap_config_done===0)
+  {
+    ap_config_done=ap_config_done+1;
+
+
+  let cf=JSON.parse(body);
+    
+ 	Cfg.set({wifi: {ap: {enable: false}}});
+	Cfg.set( {wifi: {ap: {ssid: cf.ssid}}} );
+	Cfg.set( {wifi: {ap: {pass: cf.pass}}} );    Sys.usleep(5000);
+
+ 	Cfg.set({wifi: {ap: {enable: true}}});
+print("AP CONFIGURED with SSID "+Cfg.get("wifi.ap.ssid"));
+
+    
+  }
+  
+  
+
 			  	
 			  },
 			  error: function(err) { print(err); },  // Optional
