@@ -75,7 +75,7 @@ let init_cfg=function() {
 	Cfg.set( {wifi: {ap: {password: Cfg.get("def_s.ap.passwd")}}} );
  	Cfg.set({wifi: {ap: {enable: true}}});
 
-    Sys.usleep(50000);
+    Sys.usleep(5000);
 
 
 
