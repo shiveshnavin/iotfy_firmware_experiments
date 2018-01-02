@@ -57,7 +57,7 @@ let save_cfg=function(cfg) {
 	
 	Cfg.set({def_s: {dev: {id:cfg.udid}}}});            // Set def_s.devid.id to cfg.id as obtained from the URL response
 	Cfg.set({def_s: {ap: {ssid:cfg.ap_ssid}}}});  
-	Cfg.set({def_s: {ap: {passwd:cfg.ap_passwd}}}});  
+	Cfg.set({def_s: {ap: {pass:cfg.ap_passwd}}}});  
 
 	print("New Configuration Updated !");
 
@@ -72,11 +72,20 @@ let init_cfg=function() {
 		*/
 
 	Cfg.set( {wifi: {ap: {ssid: Cfg.get("def_s.ap.ssid")}}} );
-	Cfg.set( {wifi: {ap: {password: Cfg.get("def_s.ap.passwd")}}} );
+	Cfg.set( {wifi: {ap: {pass: Cfg.get("def_s.ap.pass")}}} );
  	Cfg.set({wifi: {ap: {enable: true}}});
 
-    Sys.usleep(50000);
+    Sys.usleep(5000);
 
+	/*
+			Connect to WiFi here
+		*/
+
+	Cfg.set( {wifi: {sta: {ssid: Cfg.get("def_s.ap.ssid")}}} );
+	Cfg.set( {wifi: {sta: {pass: Cfg.get("def_s.ap.pass")}}} );
+ 	Cfg.set({wifi: {sta: {enable: true}}});
+
+    Sys.usleep(5000);
 
 
 	print("New Configuration Loaded !");
