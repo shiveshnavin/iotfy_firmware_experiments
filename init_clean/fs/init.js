@@ -38,11 +38,37 @@ let getCfg=function(cfg_path){
 };
 let getAPConfig=function(){
 
+		let http_url=HOST+"get_cfg.php";
+		HTTP.query({
+			  url: http_url,
+			  headers: { 'X-q': 'query' },     // Optional - headers
+			  data: {ram: Sys.free_ram(), q: 'Mongoose OS'},      // Optional. If set, JSON-encoded and POST-ed
+			  success: function(body, full_http_msg) { 
 
-  let ap_conf=getCfg("dev.id");
-  
-  return ap_conf;
-  
+
+
+						/*
+							Sample cfg Structure
+
+							let cfg={
+								udid: "DEV123456789ABCDE"
+								ap_ssid : "ESP_DEV123456789ABCDE"
+								ap_passwd: "Mongoose_DEV123456789ABCDE"
+	
+							};
+							
+						*/
+
+			  		print(body);
+			  		
+
+
+			  },
+			  error: function(err) { print(err); },  // Optional
+			});
+
+
+
 
 };
 
@@ -112,7 +138,7 @@ let addIntrHandler=function(pin){
 };
 
 let getInfo = function() {
-  return JSON.stringify({
+  return ({
     total_ram: Sys.total_ram(),
     free_ram: Sys.free_ram()
   });
@@ -122,7 +148,7 @@ let getInfo = function() {
 
 RPC.addHandler('about_device', function(args) {
   
-    return {ap_config:getAPConfig()};
+    return {ap_config:getInfo()};
     
 });
 
