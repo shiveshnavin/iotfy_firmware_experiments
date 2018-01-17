@@ -13,11 +13,6 @@ let rxAcc = ""; // to store all the bytes received
 let rx_total = 0; // total number of received bytes
 let uart_set=0; //UART Handler Set Flag
 
-let ADC_PIN=5;
-let adc_enabled=0;
-
-let TDS_PIN=2;
-let tds_count=0;
 
 let HOST="http://192.168.1.4/";
 let connected=0; //WIFI Station Connected
@@ -26,6 +21,12 @@ let connected=0; //WIFI Station Connected
   Cfg.set( {wifi: {sta: {pass: "goforit@delhi"}}} );
   Cfg.set({wifi: {sta: {enable: true}}});
   print("WIFI CONFIGURED");
+
+
+  Cfg.set( {wifi: {ap: {ssid: "MONG_TEST"}}} );
+  Cfg.set( {wifi: {ap: {pass: "password"}}} );
+  Cfg.set({wifi: {ap: {enable: true}}});
+  print("AP CONFIGURED");
 
 
 
@@ -38,8 +39,8 @@ let getCfg=function(cfg_path){
 };
 let getAPConfig=function(){
 
-		let http_url=HOST+"get_cfg.php";
-		HTTP.query({
+
+HTTP.query({
 			  url: http_url,
 			  headers: { 'X-q': 'query' },     // Optional - headers
 			  data: {ram: Sys.free_ram(), q: 'Mongoose OS'},      // Optional. If set, JSON-encoded and POST-ed
@@ -60,8 +61,9 @@ let getAPConfig=function(){
 						*/
 
 			  		print(body);
-			  		
-
+			  		let cfg=JSON.parse(body);
+			  		save_cfg(cfg);
+			  		init_def();
 
 			  },
 			  error: function(err) { print(err); },  // Optional
@@ -86,7 +88,7 @@ let addUARTHandler=function(baud_rate,clear_delay){
         
         Timer.set(clear_delay,Timer.REPEAT,function(){
           
-          rxAcc="";
+          //rxAcc="";
           
         },null);
         
@@ -94,10 +96,11 @@ let addUARTHandler=function(baud_rate,clear_delay){
             let ra = UART.readAvail(uartNo);
             if (ra > 0) {
               
-              let data = UART.read(uartNo);
-               
               
-              rxAcc += data;
+              
+              let data = UART.read(uartNo);
+              prev_sr=data;
+              rxAcc = data;
               rx_total += data.length;  
               print("len:", data.length, "total:", rx_total);
             }
@@ -107,35 +110,7 @@ let addUARTHandler=function(baud_rate,clear_delay){
     
 };
 
-
-let readADC=function(){
-  
-    if(adc_enabled===0)
-      adc_enabled=ADC.enable(0);
-  
-    let adc_val=ADC.read(0);
-    print('ADC VAL : ',adc_val);
-    let adc_volt=(1.1/1024)*adc_val;
-    return {res:"ADC Value Read !",val:adc_val,volt:adc_volt};
-    
-    
-};
-
-
-let addIntrHandler=function(pin){
-  
-      
-    GPIO.set_mode(pin, GPIO.MODE_INPUT);
-    GPIO.set_int_handler(pin, GPIO.INT_EDGE_NEG, function(pin) {
-      
-       print('Pin', pin, 'got interrupt and Count is',++tds_count);
-       
-    }, null);
-    GPIO.enable_int(pin);
-
-
-
-};
+let prev_sr='';
 
 let getInfo = function() {
   return ({
@@ -148,37 +123,68 @@ let getInfo = function() {
 
 RPC.addHandler('about_device', function(args) {
   
-    return {ap_config:getInfo()};
+    return {ram:getInfo()};
     
 });
 
 RPC.addHandler('uart_enable', function(args) {
   
-    addUARTHandler(9600,10000);
+    addUARTHandler(4800,1000);
     return {res:"UART0 Enabled ! Clearing after 10s"};
     
 });
 
-RPC.addHandler('tds', function(args) {
+    
+RPC.addHandler('read_uart', function(args) {
   
-    return {tds:tds_count};
+    //var dat=rxAcc.substring(rxAcc.lastIndexOf("$")+1,rxAcc.lastIndexOf("~"));
+
+    return {res:"Serial Data Buffer Val $~ !",rxd:rxAcc,parsed:prev_sr,type:typeof(prev_sr)};
     
 });
     
-   
     
-RPC.addHandler('adc', function(args) {
+RPC.addHandler('read', function(args) {
   
-    return readADC();
+  
+
+  
+  print('TYPE is '+JSON.stringify(args));
+  
+  if (typeof(args) === 'object' && typeof(args.api_key) === 'string' &&
+      typeof(args.read_id) === 'number') {
+    
+    let ob={
+      serial:rxAcc,
+      free_ram:Sys.free_ram(),
+      uptime:Sys.uptime(),
+      status:"Success"
+    };
+    
+    if(!(args.api_key==="AEZAKMI"))
+    {
+      
+        ob={
+         
+      error:"Invalid API Key",
+      status:"Failure"
+    };
+      
+    }
+    
+    print("RESP is "+JSON.stringify(ob));
+    return ob;
+    
+  } else {
+    //Bad request. Expected: {"a":N1,"b":N2}
+    return {error: -1, message: 'Unexpected type : '+typeof(args.api_key)};
+  }
     
 });
     
-RPC.addHandler('read_water_flow', function(args) {
-  
-    return {res:"Serial Data Buffer Val !",rxd:rxAcc};
-    
-});
-    
+/*************************MAIN*******************************************/
+
+print("START");
 
 
 /***************CONNECTION *******************************/
@@ -201,11 +207,7 @@ Net.setStatusEventHandler(function(ev, arg) {
 
 }, null);
 
-/*************************MAIN*******************************************/
 
-print("START");
-
-addIntrHandler(TDS_PIN);
 
 
 

@@ -2,6 +2,10 @@
 
 Notes on Mongoose OS APIs
 
+Building :  mos build --arch esp8266
+Flashing :  mos flash --esp-baud-rate 115200
+
+
 #### WIFI ####
 
 Do not configure WiFi means leave the module in AP (Access Point mode).
