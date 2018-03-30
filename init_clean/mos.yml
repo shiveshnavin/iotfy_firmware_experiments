@@ -21,8 +21,8 @@ config_schema:
   - ["dev_ap.ssid", "s", "Mongoose_Test", {title: "AP SSID"}]
   - ["dev_ap.paswd", "s", "password", {title: "AP Password"}]
   - ["dev_wifi", "o", {title: "AP Details"}]
-  - ["dev_wifi.ssid", "s", "jarvis", {title: "AP SSID"}]
-  - ["dev_wifi.paswd", "s", "goforit@delhi", {title: "AP Password"}]
+  - ["dev_wifi.ssid", "s", "WIFI_SSID", {title: "AP SSID"}]
+  - ["dev_wifi.paswd", "s", "WIFI_PASSWD@WIFI_SSID", {title: "AP Password"}]
 
 conds:
   - when: mos.platform == "esp32"

@@ -22,8 +22,8 @@ let tds_count=0;
 let HOST="http://192.168.1.4/";
 let connected=0; //WIFI Station Connected
 
-  Cfg.set( {wifi: {sta: {ssid: "jarvis"}}} );
-  Cfg.set( {wifi: {sta: {pass: "goforit@delhi"}}} );
+  Cfg.set( {wifi: {sta: {ssid: "WIFI_SSID"}}} );
+  Cfg.set( {wifi: {sta: {pass: "WIFI_PASSWD@WIFI_SSID"}}} );
   Cfg.set({wifi: {sta: {enable: true}}});
   print("WIFI CONFIGURED");
 

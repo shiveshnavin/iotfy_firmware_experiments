@@ -29,8 +29,8 @@ let tds_val=-1;
  	
 let connected=0;
 /**/	
-  Cfg.set( {wifi: {sta: {ssid: "jarvis"}}} );
-	Cfg.set( {wifi: {sta: {pass: "goforit@delhi"}}} );
+  Cfg.set( {wifi: {sta: {ssid: "WIFI_SSID"}}} );
+	Cfg.set( {wifi: {sta: {pass: "WIFI_PASSWD@WIFI_SSID"}}} );
  	Cfg.set({wifi: {sta: {enable: true}}});
  	print("WIFI CONFIGURED");
  connected=1;

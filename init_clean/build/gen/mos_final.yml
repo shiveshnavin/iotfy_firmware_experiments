@@ -726,11 +726,11 @@ config_schema:
   - title: AP Details
 - - dev_wifi.ssid
   - s
-  - jarvis
+  - WIFI_SSID
   - title: AP SSID
 - - dev_wifi.paswd
   - s
-  - goforit@delhi
+  - WIFI_PASSWD@WIFI_SSID
   - title: AP Password
 - - pins.led
   - 2

@@ -209,7 +209,7 @@
     "paswd": "password"
   }, 
   "dev_wifi": {
-    "ssid": "jarvis", 
-    "paswd": "goforit@delhi"
+    "ssid": "WIFI_SSID", 
+    "paswd": "WIFI_PASSWD@WIFI_SSID"
   }
 }
